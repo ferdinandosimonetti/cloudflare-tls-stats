@@ -44,10 +44,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
-    - name: Build executable for TLS statistics
+    - name: Build executable for TLS statistics - Linux
       run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check.bin
       #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
-    - name: Build executable for TLS cyphers
+    - name: Build executable for TLS cyphers - Linux
       run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers.bin 
       #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
     - name: Upload executable(s)
