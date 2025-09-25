@@ -45,16 +45,16 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     - name: Build executable for TLS statistics - Linux
-      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-linux.bin
+      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-linux-x86_64
       #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
     - name: Build executable for TLS cyphers - Linux
-      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-linux.bin 
+      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-linux-x86_64
       #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
     - name: Upload executable(s)
       uses: actions/upload-artifact@v4
       with:
         name: linux-executable
-        path: dist/*-linux.bin
+        path: dist/*-linux-x86_64
 
   build-macos:
     runs-on: macos-latest
@@ -69,14 +69,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
-    - name: Build executable for TLS statistics - Linux
-      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-macos.bin
+    - name: Build executable for TLS statistics - MacOS
+      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-macos-arm64
       #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
-    - name: Build executable for TLS cyphers - Linux
-      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-macos.bin 
+    - name: Build executable for TLS cyphers - MacOS
+      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-macos-arm64 
       #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
     - name: Upload executable(s)
       uses: actions/upload-artifact@v4
       with:
         name: macos-executable
-        path: dist/*-macos.bin
+        path: dist/*-macos-arm64
