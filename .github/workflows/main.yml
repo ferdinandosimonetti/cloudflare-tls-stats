@@ -19,9 +19,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
-    - name: Build executable
+    - name: Build executable for TLS statistics
       run: pyinstaller --onefile --noconsole q3.py
-    - name: Upload executable
+    - name: Build executable for TLS cyphers
+      run: pyinstaller --onefile --noconsole find-cyphers.py
+    - name: Upload executable(s)
       uses: actions/upload-artifact@v4
       with:
         name: windows-executable
