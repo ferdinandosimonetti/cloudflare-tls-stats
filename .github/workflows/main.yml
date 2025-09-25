@@ -20,9 +20,11 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     - name: Build executable for TLS statistics
-      run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
+      run: pyinstaller --onefile cloudflare-tls-check.py
+      #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
     - name: Build executable for TLS cyphers
-      run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
+      run: pyinstaller --onefile cloudflare-find-cyphers.py  
+      #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
     - name: Upload executable(s)
       uses: actions/upload-artifact@v4
       with:

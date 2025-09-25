@@ -4,6 +4,7 @@ import os
 
 parser = argparse.ArgumentParser(description="Query Cloudflare TLS cyphers for all zones")
 parser.add_argument("--api-token", required=True, help="Cloudflare API token")
+parser.add_argument("--zone-filter", help="Filter zones by name substring")
 args = parser.parse_args()
 API_TOKEN = args.api_token
 #API_TOKEN = os.environ.get("CF_API_TOKEN")  # Zone:Read, Zone Settings:Read
@@ -43,7 +44,7 @@ TLS_CIPHERS = {
     ],
 }
 
-def list_zones():
+def list_zones(zone_filter=args.zone_filter):
     url = f"{BASE_URL}/zones"
     zones, page = [], 1
     while True:
@@ -54,6 +55,12 @@ def list_zones():
         if page >= data["result_info"]["total_pages"]:
             break
         page += 1
+    
+    if zone_filter:
+        zones = [z for z in zones if args.zone_filter.lower() in z["name"].lower()]
+    if not zones:
+        print(f"❌ No zones match the filter '{args.zone_filter}'")
+        exit(1)
     return zones
 
 def get_tls_settings(zone_id):
