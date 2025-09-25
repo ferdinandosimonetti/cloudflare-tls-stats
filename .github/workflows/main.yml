@@ -54,4 +54,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: linux-executable
-        path: dist\*.bin
+        path: dist/*.bin
