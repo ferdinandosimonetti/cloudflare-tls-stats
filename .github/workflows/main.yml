@@ -45,13 +45,38 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     - name: Build executable for TLS statistics - Linux
-      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check.bin
+      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-linux.bin
       #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
     - name: Build executable for TLS cyphers - Linux
-      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers.bin 
+      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-linux.bin 
       #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
     - name: Upload executable(s)
       uses: actions/upload-artifact@v4
       with:
         name: linux-executable
-        path: dist/*.bin
+        path: dist/*-linux.bin
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    - name: Build executable for TLS statistics - Linux
+      run: pyinstaller --onefile cloudflare-tls-check.py --name cloudflare-tls-check-macos.bin
+      #run: pyinstaller --onefile --noconsole cloudflare-tls-check.py
+    - name: Build executable for TLS cyphers - Linux
+      run: pyinstaller --onefile cloudflare-find-cyphers.py --name cloudflare-find-cyphers-macos.bin 
+      #run: pyinstaller --onefile --noconsole cloudflare-find-cyphers.py
+    - name: Upload executable(s)
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-executable
+        path: dist/*-macos.bin
