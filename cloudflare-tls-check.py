@@ -236,7 +236,8 @@ def get_all_zones_rest_api(api_token: str, verbose: bool = False) -> List[Dict[s
             for zone in page_zones:
                 zones.append({
                     "zoneTag": zone["id"],
-                    "name": zone["name"]
+                    "name": zone["name"],
+                    "plan": zone["plan"]["name"] if "plan" in zone and "name" in zone["plan"] else "N/A"
                 })
             
             # Check if there are more pages
@@ -422,7 +423,7 @@ def fetch_zone_tls_stats_chunked(api_token: str, zone_name: str, zone_tag: str,
     return aggregate_tls_stats(chunk_stats)
 
 
-def display_zone_tls_stats(zone_name: str, zone_tag: str, tls_stats: Dict[str, int]) -> None:
+def display_zone_tls_stats(zone_name: str, zone_tag: str, zone_plan: str, tls_stats: Dict[str, int]) -> None:
     """
     Display TLS statistics for a single zone.
     
@@ -447,7 +448,7 @@ def display_zone_tls_stats(zone_name: str, zone_tag: str, tls_stats: Dict[str, i
         print(f"   {protocol:<15}: {requests:>10,} requests ({percentage:>6.2f}%)")
 
 
-def export_zone_tls_stats(zone_name: str, zone_tag: str, tls_stats: Dict[str, int], export_file: str) -> None:
+def export_zone_tls_stats(zone_name: str, zone_tag: str, zone_plan: str, tls_stats: Dict[str, int], export_file: str) -> None:
     """
     Export TLS statistics for a single zone to a file
     
@@ -468,7 +469,7 @@ def export_zone_tls_stats(zone_name: str, zone_tag: str, tls_stats: Dict[str, in
     try:
         with open(export_file, 'a') as f:
             for protocol, requests in sorted_stats:
-                f.write(f"{zone_name};{zone_tag};{protocol};{requests}\n")
+                f.write(f"{zone_name};{zone_tag};{zone_plan};{protocol};{requests}\n")
     except IOError as e:
         print(f"Error writing to export file {export_file}: {e}", file=sys.stderr)
 
@@ -535,6 +536,7 @@ def main():
     for i, zone in enumerate(zones, 1):
         zone_name = zone["name"]
         zone_tag = zone["zoneTag"]
+        zone_plan = zone.get("plan", "N/A") 
         
         print(f"\n⏳ Processing zone {i}/{len(zones)}: {zone_name}")
         
@@ -558,9 +560,9 @@ def main():
                 else:
                     global_tls_stats[protocol] = requests
             
-            display_zone_tls_stats(zone_name, zone_tag, zone_tls_stats)
+            display_zone_tls_stats(zone_name, zone_tag, zone_plan, zone_tls_stats)
             if args.export_file:
-                export_zone_tls_stats(zone_name, zone_tag, zone_tls_stats, args.export_file)
+                export_zone_tls_stats(zone_name, zone_tag, zone_plan, zone_tls_stats, args.export_file)
         else:
             print(f"   ❌ Failed to get data for {zone_name}")
             all_zone_stats[zone_name] = {}
